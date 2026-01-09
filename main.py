@@ -101,11 +101,7 @@ def search_tasks(tasks):
             found_tasks.append(task)
 
     if found_tasks:
-        print("\nНайдено:")
-        for i, task in enumerate(found_tasks, start=1):
-            print(f"{i}. {task['name']} | Приоритет: {task['priority']} | Дата: {task['date']}")
-    else:
-        print("Задачи не найдены.")
+        show_tasks(found_tasks)
 
 # === Главное меню ===
 def main():

@@ -1,14 +1,29 @@
+import sys
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableView
+
 from storage.json_storage import JsonStorage
 from services.task_service import TaskService
-from ui.console_ui import ConsoleUI
+from ui.task_table_model import TaskTableModel
 
-file_name = "tasks.json"
 
 def main():
-    storage = JsonStorage(filename=file_name)
+    app = QApplication(sys.argv)
+
+    storage = JsonStorage("tasks.json")
     service = TaskService(storage)
-    ui = ConsoleUI(service)
-    ui.run()
+
+    window = QMainWindow()
+    table = QTableView()
+
+    model = TaskTableModel(service)
+    table.setModel(model)
+
+    window.setCentralWidget(table)
+    window.resize(800, 400)
+    window.show()
+
+    sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()

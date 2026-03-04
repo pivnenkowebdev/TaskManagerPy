@@ -38,11 +38,14 @@ class TaskService:
 
     def search(self, keyword: str) -> list[Task]:
         keyword = keyword.lower()
-        return [
-            task
-            for task in self.tasks
-            if keyword in task.name.lower()
-        ]
+        result = []
+
+        for task in self.tasks:
+            if keyword in task.name.lower():
+                result.append(task)
+
+        return result
+
 
     def get_all(self) -> list[Task]:
         return self.tasks

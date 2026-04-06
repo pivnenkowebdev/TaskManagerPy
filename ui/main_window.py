@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
 from storage.json_storage import JsonStorage
 from services.task_service import TaskService
 from ui.task_table_model import TaskTableModel
-
+from ui.add_task_dialog import AddTaskDialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -42,7 +42,16 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(container)
 
-    # --- логика ---
+    # # --- логика ---
+    # def add_task(self):
+    #     self.service.add_task("Test Task", "High", "2026-01-01")
+    #     self.model.refresh()
+
     def add_task(self):
-        self.service.add_task("Test Task", "High", "2026-01-01")
-        self.model.refresh()
+        dialog = AddTaskDialog(self)
+
+        if dialog.exec():  # если нажали "Добавить"
+            name, priority, date = dialog.get_data()
+
+            self.service.add_task(name, priority, date)
+            self.model.refresh()

@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QLineEdit,
     QMainWindow,
     QWidget,
     QVBoxLayout,
@@ -27,6 +28,10 @@ class MainWindow(QMainWindow):
         # --- model ---
         self.model = TaskTableModel(self.service)
 
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Поиск...")
+        self.search_input.textChanged.connect(self.search_tasks)
+        
         # --- UI ---
         self.table = QTableView()
         self.table.setModel(self.model)
@@ -44,6 +49,7 @@ class MainWindow(QMainWindow):
 
         # layout
         layout = QVBoxLayout()
+        layout.addWidget(self.search_input)
         layout.addWidget(self.table)
         layout.addWidget(self.add_button)
         layout.addWidget(self.delete_button)
@@ -57,6 +63,16 @@ class MainWindow(QMainWindow):
     # def add_task(self):
     #     self.service.add_task("Test Task", "High", "2026-01-01")
     #     self.model.refresh()
+
+    def search_tasks(self, text):
+        text = text.strip()
+
+        if not text:
+            self.model.refresh()
+            return
+
+        results = self.service.search(text)
+        self.model.set_tasks(results)
 
     def add_task(self):
         dialog = AddTaskDialog(self)

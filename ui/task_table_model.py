@@ -9,11 +9,14 @@ class TaskTableModel(QAbstractTableModel):
         self._headers = ["Name", "Priority", "Date"]
         self.tasks = self._service.get_all()
 
+    def set_tasks(self, tasks):
+        self.beginResetModel()
+        self.tasks = tasks
+        self.endResetModel()
+
     # обновление кеша
     def refresh(self):
-        self.beginResetModel()
-        self.tasks = self._service.get_all()
-        self.endResetModel()
+        self.set_tasks(self._service.get_all())
 
     # количество строк
     def rowCount(self, parent=QModelIndex()):

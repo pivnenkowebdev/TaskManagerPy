@@ -23,6 +23,15 @@ class TaskService:
         self.storage.save(self.tasks)
 
         return task
+    
+    def search(self, keyword: str):
+        keyword = keyword.lower()
+
+        return [
+            task
+            for task in self.tasks
+            if keyword in task.name.lower()
+        ]
 
     def get_all(self) -> list[Task]:
         return list(self.tasks)

@@ -47,12 +47,17 @@ class MainWindow(QMainWindow):
         self.delete_button = QPushButton("Удалить задачу")
         self.delete_button.clicked.connect(self.delete_task)
 
+        # изменение
+        self.edit_button = QPushButton("Редактировать задачу")
+        self.edit_button.clicked.connect(self.edit_task)
+        
         # layout
         layout = QVBoxLayout()
         layout.addWidget(self.search_input)
         layout.addWidget(self.table)
         layout.addWidget(self.add_button)
         layout.addWidget(self.delete_button)
+        layout.addWidget(self.edit_button)
 
         container = QWidget()
         container.setLayout(layout)
@@ -63,6 +68,37 @@ class MainWindow(QMainWindow):
     # def add_task(self):
     #     self.service.add_task("Test Task", "High", "2026-01-01")
     #     self.model.refresh()
+
+    def edit_task(self):
+        selection = self.table.selectionModel().selectedRows()
+
+        if not selection:
+            QMessageBox.warning(
+                self,
+                "Ошибка",
+                "Выберите задачу"
+            )
+            return
+
+        row = selection[0].row()
+        task = self.model.tasks[row]
+
+        dialog = AddTaskDialog(
+            self,
+            task=task
+        )
+
+        if dialog.exec():
+            name, priority, date = dialog.get_data()
+
+            self.service.update_task(
+                task.id,
+                name,
+                priority,
+                date,
+            )
+
+            self.model.refresh()
 
     def search_tasks(self, text):
         text = text.strip()

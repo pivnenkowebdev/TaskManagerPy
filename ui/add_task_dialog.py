@@ -13,10 +13,14 @@ from PySide6.QtCore import QDate
 
 
 class AddTaskDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, task=None):
         super().__init__(parent)
 
-        self.setWindowTitle("Добавить задачу")
+        if task:
+            self.setWindowTitle("Редактировать задачу")
+        else:
+            self.setWindowTitle("Добавить задачу")
+
         self.setModal(True)
         self.resize(300, 200)
 
@@ -32,7 +36,11 @@ class AddTaskDialog(QDialog):
         self.date_input.setCalendarPopup(True)
 
         # --- кнопки ---
-        self.ok_button = QPushButton("Добавить")
+        if task:
+            self.ok_button = QPushButton("Редактировать")
+        else:
+            self.ok_button = QPushButton("Добавить")
+            
         self.cancel_button = QPushButton("Отмена")
 
         self.ok_button.clicked.connect(self.on_accept)
@@ -55,6 +63,20 @@ class AddTaskDialog(QDialog):
         buttons_layout.addWidget(self.cancel_button)
 
         layout.addLayout(buttons_layout)
+
+        if task:
+            self.name_input.setText(task.name)
+
+            self.priority_input.setCurrentText(
+                task.priority
+            )
+
+            self.date_input.setDate(
+                QDate.fromString(
+                    task.date,
+                    "yyyy-MM-dd"
+                )
+            )
 
         self.setLayout(layout)
 
